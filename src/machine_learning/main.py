@@ -1,5 +1,8 @@
+from trainning import trainning
+
+
 def main():
-  pass
+  trainning()
 
 if __name__ == "__main__":
   main()
