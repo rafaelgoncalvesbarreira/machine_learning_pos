@@ -14,6 +14,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import make_column_transformer
 from sklearn.neural_network import MLPClassifier
 from dtreeviz.trees import *
+import feature_analysis
 
 def missing_data(dataframe: pd.DataFrame) -> pd.DataFrame:
   pass
@@ -51,56 +52,7 @@ def pre_processing(dataframe: pd.DataFrame) -> pd.DataFrame:
 
   return dataframe
 
-def data_graph(dataframe: pd.DataFrame):
-  bar_columns = ['gender','hypertension','heart_disease','ever_married','work_type','Residence_type','smoking_status','stroke']
-  hist_columns = ['age', 'avg_glucose_level', 'bmi']
-  
-  figBar, axes = plt.subplots(2,4, figsize=(15,10))
 
-  colors=['blue','orange', 'green', 'yellow']
-
-  col_idx = 0
-  for i in range(2):
-    for j in range(4):
-      graph = axes[i][j]
-      qtd = dataframe[bar_columns[col_idx]].value_counts()
-      x = np.arange(len(qtd))
-      hbar = graph.bar(x, height=qtd.values, width=0.3, color=colors)
-      graph.set_xticks(x, qtd.index)
-      graph.set_title(bar_columns[col_idx])
-      # axes[i][j].bar_label(hbar, padding=2)
-
-      for b in graph.containers:
-        graph.bar_label(b)
-      
-      # for k, k_qtd in enumerate(qtd.tolist()):
-      #   axes[i][j].text(k + .25, qtd + 3, str(k_qtd))
-
-      col_idx = col_idx + 1
-  
-  # fig1, ax1 = plt.subplots()
-  # ax1.text
-
-  # qtd = dataframe['stroke'].value_counts()
-  # y_position = np.arange(len(qtd))
-  
-  # hbar = ax1.bar(y_position, height=qtd.values, width=0.7, color= cm)
-  # ax1.set_xticks(y_position, qtd.index)
-  # ax1.set_title('Quantidade de pessoas com AVC?')
-
-  # ax1.bar_label(hbar, padding=2)
-
-
-  figHist, axesHist = plt.subplots(3,1, figsize=(15,10))
-  
-  for i in range(len(hist_columns)):
-    axesHist[i].hist(dataframe[hist_columns[i]])
-    axesHist[i].set_title(hist_columns[i])
-
-
-  figBar.tight_layout(pad=1.5, w_pad=2, h_pad=2)
-  figHist.tight_layout(pad=1.5, w_pad=2, h_pad=2)
-  plt.show()
 
 
 def trainning():
@@ -112,10 +64,7 @@ def trainning():
   # print(f'Tipo de dados: {brain_stroke.dtypes}')
   # print(brain_stroke.describe())
 
-  result = dataframe.query('age < 18 and stroke==1')
-  print(result)
-
-  data_graph(dataframe)
+  # data_graph(dataframe)
 
   dataframe = pre_processing(dataframe)
   print(dataframe.dtypes)
