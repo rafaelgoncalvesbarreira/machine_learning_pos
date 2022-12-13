@@ -68,10 +68,10 @@ def trainning():
   
   features = dataframe.columns.values.tolist()
   features = [c for c in features if c.startswith('stroke') == False]
-  X = dataframe[features]
-  y = dataframe['stroke']
+  attibutes_cols = dataframe[features]
+  label_col = dataframe['stroke']
 
-  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
+  X_train, X_test, y_train, y_test = train_test_split(attibutes_cols, label_col, test_size=0.25)
 
   print("Arvore de descisão")
   decision_tree_model = DecisionTreeClassifier(random_state=0, criterion='entropy', class_weight='balanced')
@@ -79,12 +79,12 @@ def trainning():
   
   metrics_name = ['accuracy', 'precision_macro', 'recall_macro']
   metrics = cross_validate(decision_tree_model, X_train, y_train, cv=5, scoring=metrics_name)
-  for met in metrics:
-    print(f"- {met}:")
-    print(f"-- {metrics[met]}")
-    print(f"-- {np.mean(metrics[met])} +- {np.std(metrics[met])}\n") 
+  # for met in metrics:
+  #   print(f"- {met}:")
+  #   print(f"-- {metrics[met]}")
+  #   print(f"-- {np.mean(metrics[met])} +- {np.std(metrics[met])}\n") 
   
-  tree_predicts = cross_val_predict(decision_tree_model, X, y, cv=5)
+  tree_predicts = cross_val_predict(decision_tree_model, attibutes_cols, label_col, cv=5)
   print(tree_predicts)
 
 

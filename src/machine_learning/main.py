@@ -5,5 +5,5 @@ def main():
   trainning()
 
 if __name__ == "__main__":
-  # main()
-  feature_analysis.start()
+  main()
+  # feature_analysis.start()
