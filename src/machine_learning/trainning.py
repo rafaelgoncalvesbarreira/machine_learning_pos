@@ -13,8 +13,10 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import make_column_transformer
 from sklearn.neural_network import MLPClassifier
+from sklearn.naive_bayes import GaussianNB
 from dtreeviz.trees import *
 import feature_analysis
+from feature_analysis import oversample
 
 def missing_data(dataframe: pd.DataFrame) -> pd.DataFrame:
   pass
@@ -59,16 +61,8 @@ def trainning():
 
   dataframe = pd.read_csv("database/brain_stroke.csv")
 
-  # print(f'Dimensao: { brain_stroke.shape}')
-  # print(f'Campos: { list(brain_stroke.keys())}')
-  # print(f'Tipo de dados: {brain_stroke.dtypes}')
-  # print(brain_stroke.describe())
-
-  # data_graph(dataframe)
-
   dataframe = pre_processing(dataframe)
-  print(dataframe.dtypes)
-
+  dataframe = oversample(dataframe)
 
   classes = ['Non-stroke', 'Stroke']
   
@@ -109,11 +103,34 @@ def trainning():
 
   # viz.view()
 
+  conf_matrix = confusion_matrix(y_test, y_prediction)
+  confussion_table = pd.DataFrame(data=conf_matrix, index=classes, columns=[x + "(prev)" for x in classes])
+  print(confussion_table)
+
+  print("\n########################\n\n\n\n")
+
   print("Rede neural")
   neural_network_model = MLPClassifier()
   neural_network_model = neural_network_model.fit(X_train, y_train)
   
   neural_pred = neural_network_model.predict(X_test)
-  print("Acurácia de previsão:", accuracy_score(y_test, neural_pred))
+  print("Acurácia de previsão redes neurais:", accuracy_score(y_test, neural_pred))
   print(classification_report(y_test, neural_pred, target_names=classes))
+
+  conf_matrix = confusion_matrix(y_test, neural_pred)
+  confussion_table = pd.DataFrame(data=conf_matrix, index=classes, columns=[x + "(prev)" for x in classes])
+  print(confussion_table)
+
+  #Gaussian Naïve-Bayes
+
+  print("\n########################\n\n\n\n")
+  print("Gauss Naive-Bayes")
+  gnb = GaussianNB()
+  gnb_model = gnb.fit(X_train, y_train)
+  gnb_pred= gnb_model.predict(X_test)
+  print("Acurácia de previsão naive-bayes:", accuracy_score(y_test, gnb_pred))
+  print(classification_report(y_test, gnb_pred, target_names=classes))
+  conf_matrix = confusion_matrix(y_test, gnb_pred)
+  confussion_table = pd.DataFrame(data=conf_matrix, index=classes, columns=[x + "(prev)" for x in classes])
+  print(confussion_table)
   
