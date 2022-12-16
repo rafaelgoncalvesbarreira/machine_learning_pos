@@ -74,34 +74,13 @@ def trainning():
   X_train, X_test, y_train, y_test = train_test_split(attibutes_cols, label_col, test_size=0.25)
 
   print("Arvore de descisão")
-  decision_tree_model = DecisionTreeClassifier(random_state=0, criterion='entropy', class_weight='balanced')
-  decision_tree_model = decision_tree_model.fit(X_train, y_train)
-  
-  metrics_name = ['accuracy', 'precision_macro', 'recall_macro']
-  metrics = cross_validate(decision_tree_model, X_train, y_train, cv=5, scoring=metrics_name)
-  # for met in metrics:
-  #   print(f"- {met}:")
-  #   print(f"-- {metrics[met]}")
-  #   print(f"-- {np.mean(metrics[met])} +- {np.std(metrics[met])}\n") 
-  
-  tree_predicts = cross_val_predict(decision_tree_model, attibutes_cols, label_col, cv=5)
-  print(tree_predicts)
 
+  decision_tree_model = DecisionTreeClassifier(random_state=0, criterion='entropy')
+  decision_tree_model = decision_tree_model.fit(X_train, y_train)
 
   y_prediction = decision_tree_model.predict(X_test)
   print("Acurácia de previsão:", accuracy_score(y_test, y_prediction))
   print(classification_report(y_test, y_prediction, target_names=classes))
-  # print("%0.2f accuracy with a standard deviation of %0.2f" % (scores.mean(), scores.std()))
-
-
-  # viz = dtreeviz(decision_tree_model,
-  #             X_train,
-  #             y_train,
-  #             target_name="stroke_categ",
-  #             feature_names=features,
-  #             class_names=classes)  
-
-  # viz.view()
 
   conf_matrix = confusion_matrix(y_test, y_prediction)
   confussion_table = pd.DataFrame(data=conf_matrix, index=classes, columns=[x + "(prev)" for x in classes])
@@ -125,8 +104,10 @@ def trainning():
 
   print("\n########################\n\n\n\n")
   print("Gauss Naive-Bayes")
+
   gnb = GaussianNB()
   gnb_model = gnb.fit(X_train, y_train)
+  
   gnb_pred= gnb_model.predict(X_test)
   print("Acurácia de previsão naive-bayes:", accuracy_score(y_test, gnb_pred))
   print(classification_report(y_test, gnb_pred, target_names=classes))
